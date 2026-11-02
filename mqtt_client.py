@@ -1,5 +1,5 @@
 import paho.mqtt.client as mqtt
-from typing import Optional
+from typing import Optional, Callable
 from models import ButtonConfig
 import threading
 import time
@@ -13,12 +13,50 @@ class MQTTClientWrapper:
         self._publish_success = False
         self._error_message = ""
 
+    def publish(
+        self,
+        server: str,
+        port: int,
+        topic: str,
+        message: str,
+        username: Optional[str] = None,
+        password: Optional[str] = None,
+        qos: int = 0,
+        retain: bool = False,
+        timeout: int = 10,
+    ) -> tuple[bool, Optional[str]]:
+        """
+        Simple synchronous connect, publish, and disconnect.
+        Returns (success, error_message).
+        """
+        client = mqtt.Client()
+        
+        if username and password:
+            client.username_pw_set(username, password)
+
+        try:
+            client.connect(server, port, timeout)
+            result = client.publish(topic, message, qos=qos, retain=retain)
+            result.wait_for_publish(timeout=timeout)
+            client.disconnect()
+            return True, None
+        except Exception as e:
+            error_msg = str(e)
+            try:
+                client.disconnect()
+            except Exception:
+                pass
+            return False, error_msg
+
     def publish_message(
         self,
         config: ButtonConfig,
         timeout: int = 10,
-        callback=None,
+        callback: Optional[Callable[[bool, str], None]] = None,
     ) -> bool:
+        """
+        Async publish with callback. Uses threading to avoid blocking UI.
+        """
         def on_connect(client, userdata, flags, rc):
             if rc == 0:
                 self._connected = True
