@@ -10,8 +10,10 @@ from PyQt6.QtWidgets import (
     QColorDialog,
     QPushButton,
     QHBoxLayout,
+    QLabel,
 )
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QColor
 from models import ButtonConfig
 
 
@@ -28,6 +30,8 @@ class ConfigDialog(QDialog):
 
         form_layout = QFormLayout()
         form_layout.setLabelAlignment(Qt.AlignmentFlag.AlignRight)
+        form_layout.setFieldGrowthPolicy(QFormLayout.FieldGrowthPolicy.AllNonFixedFieldsGrow)
+        form_layout.setFormAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
 
         self.label_input = QLineEdit(self.config.label)
         self.server_input = QLineEdit(self.config.server)
