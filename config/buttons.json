@@ -1,0 +1,26 @@
+[
+  {
+    "server": "test.mosquitto.org",
+    "port": 1883,
+    "username": null,
+    "password": null,
+    "topic": "home/light/set",
+    "message": "{\"state\": \"on\"}",
+    "qos": 0,
+    "retain": false,
+    "label": "Turn On Light",
+    "button_color": "#4CAF50"
+  },
+  {
+    "server": "test.mosquitto.org",
+    "port": 1883,
+    "username": null,
+    "password": null,
+    "topic": "home/light/set",
+    "message": "{\"state\": \"off\"}",
+    "qos": 0,
+    "retain": false,
+    "label": "Turn Off Light",
+    "button_color": "#F44336"
+  }
+]
